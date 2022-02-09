@@ -1,5 +1,6 @@
 import turtle
 import winsound
+import random
 
 # draw window
 screen = turtle.Screen()
@@ -33,8 +34,8 @@ ball.shape("square")
 ball.color("white")
 ball.penup()
 ball.goto(0, 0)
-ball.dx = 2
-ball.dy = 2
+ball.dx = 0.40
+ball.dy = 0.40
 
 # scores
 score_1 = 0
@@ -104,8 +105,8 @@ while True:
     ball.sety(ball.ycor() + ball.dy)
 
     # collision with top wall
-    if ball.ycor() > 290:
-        ball.sety(290)
+    if ball.ycor() > 285:
+        ball.sety(285)
         ball.dy *= -1
         winsound.PlaySound("assets/bounce.wav",  winsound.SND_ASYNC)
 
@@ -121,8 +122,8 @@ while True:
         hud.clear()
         hud.write("{} : {}".format(score_1, score_2), align="center", font=("Press Start 2P", 24, "normal"))
         winsound.PlaySound("assets/258020__kodack__arcade-bleep-sound.wav",  winsound.SND_ASYNC)
-        ball.goto(0, 0)
-        ball.dx *= -1
+        ball.goto(0, random.randint(-200,200))
+        ball.dx = 0.40
 
     # collision with right wall
     if ball.xcor() > 390:
@@ -130,15 +131,15 @@ while True:
         hud.clear()
         hud.write("{} : {}".format(score_1, score_2), align="center", font=("Press Start 2P", 24, "normal"))
         winsound.PlaySound("assets/258020__kodack__arcade-bleep-sound.wav",  winsound.SND_ASYNC)
-        ball.goto(0, 0)
-        ball.dx *= -1
+        ball.goto(0, random.randint(-200,200))
+        ball.dx = -0.40 
 
     # collision with paddle 1
     if ball.xcor() < -330 and paddle_1.ycor() + 50 > ball.ycor() > paddle_1.ycor() - 50:
-        ball.dx *= -1
+        ball.dx = 0.90
         winsound.PlaySound("assets/bounce.wav",  winsound.SND_ASYNC)
 
     # collision with paddle 2
     if ball.xcor() > 330 and paddle_2.ycor() + 50 > ball.ycor() > paddle_2.ycor() - 50:
-        ball.dx *= -1
+        ball.dx = -0.90
         winsound.PlaySound("assets/bounce.wav",  winsound.SND_ASYNC)
