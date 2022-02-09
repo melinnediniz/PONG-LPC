@@ -1,4 +1,5 @@
 import turtle
+import winsound
 
 # draw window
 screen = turtle.Screen()
@@ -46,7 +47,7 @@ hud.shape("square")
 hud.color("white")
 hud.penup()
 hud.hideturtle()
-hud.goto(0, 260)
+hud.goto(0, 250)
 hud.write("0 : 0", align="center", font=("Press Start 2P", 24, "normal"))
 
 
@@ -104,22 +105,22 @@ while True:
 
     # collision with top wall
     if ball.ycor() > 290:
-        # os.system("afplay bounce.wav&")
         ball.sety(290)
         ball.dy *= -1
+        winsound.PlaySound("assets/bounce.wav",  winsound.SND_ASYNC)
 
     # collision with down wall
     if ball.ycor() < -280:
-        # os.system("afplay bounce.wav&")
         ball.sety(-280)
         ball.dy *= -1
+        winsound.PlaySound("assets/bounce.wav",  winsound.SND_ASYNC)
 
     # collision with left wall
     if ball.xcor() < -390:
         score_2 += 1
         hud.clear()
         hud.write("{} : {}".format(score_1, score_2), align="center", font=("Press Start 2P", 24, "normal"))
-        #        os.system("afplay 258020__kodack__arcade-bleep-sound.wav&")
+        winsound.PlaySound("assets/258020__kodack__arcade-bleep-sound.wav",  winsound.SND_ASYNC)
         ball.goto(0, 0)
         ball.dx *= -1
 
@@ -128,16 +129,16 @@ while True:
         score_1 += 1
         hud.clear()
         hud.write("{} : {}".format(score_1, score_2), align="center", font=("Press Start 2P", 24, "normal"))
-        #        os.system("afplay 258020__kodack__arcade-bleep-sound.wav&")
+        winsound.PlaySound("assets/258020__kodack__arcade-bleep-sound.wav",  winsound.SND_ASYNC)
         ball.goto(0, 0)
         ball.dx *= -1
 
     # collision with paddle 1
-    if ball.xcor() < -330 and ball.ycor() < paddle_1.ycor() + 50 and ball.ycor() > paddle_1.ycor() - 50:
+    if ball.xcor() < -330 and paddle_1.ycor() + 50 > ball.ycor() > paddle_1.ycor() - 50:
         ball.dx *= -1
-    #        os.system("afplay bounce.wav&")
+        winsound.PlaySound("assets/bounce.wav",  winsound.SND_ASYNC)
 
     # collision with paddle 2
-    if ball.xcor() > 330 and ball.ycor() < paddle_2.ycor() + 50 and ball.ycor() > paddle_2.ycor() - 50:
+    if ball.xcor() > 330 and paddle_2.ycor() + 50 > ball.ycor() > paddle_2.ycor() - 50:
         ball.dx *= -1
-#        os.system("afplay bounce.wav&")
+        winsound.PlaySound("assets/bounce.wav",  winsound.SND_ASYNC)
