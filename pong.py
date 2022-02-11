@@ -40,6 +40,7 @@ ball.dy = 0.40
 # scores
 score_1 = 0
 score_2 = 0
+score_win = 10
 
 # score head-up display
 hud = turtle.Turtle()
@@ -143,3 +144,7 @@ while True:
     if ball.xcor() > 330 and paddle_2.ycor() + 50 > ball.ycor() > paddle_2.ycor() - 50:
         ball.dx = -0.90
         winsound.PlaySound("assets/bounce.wav",  winsound.SND_ASYNC)
+        
+    # win condition
+    if score_1 == score_win or score_2 == score_win:
+        score_1 = score_2 = 0
