@@ -117,8 +117,8 @@ def main():
     ball.color("#8BD580")
     ball.penup()
     ball.goto(0, 0)
-    ball.dx = 0.40
-    ball.dy = 0.40
+    ball.dx = 0.15
+    ball.dy = 0
 
     # score head-up display
     hud = turtle.Turtle()
@@ -221,13 +221,33 @@ def main():
 
         # collision with paddle 1
         if ball.xcor() < -330 and paddle_1.ycor() + 50 > ball.ycor() > paddle_1.ycor() - 50:
-            ball.dx = 0.90
+            ball.dx = 0.30
             winsound.PlaySound(UP_DOWN_SOUND,  winsound.SND_ASYNC)
+
+            # part upper
+            if paddle_1.ycor()+55 > ball.ycor() > paddle_1.ycor()+15:
+                ball.dy = 0.1
+            # part bottom
+            elif paddle_1.ycor()-15 > ball.ycor() > paddle_1.ycor()-55:
+                ball.dy = -0.1
+            # part middle
+            else: 
+                ball.dy = random.uniform(-0.05,0.05)
 
         # collision with paddle 2
         if ball.xcor() > 330 and paddle_2.ycor() + 50 > ball.ycor() > paddle_2.ycor() - 50:
-            ball.dx = -0.90
+            ball.dx = -0.30
             winsound.PlaySound(UP_DOWN_SOUND,  winsound.SND_ASYNC)
+
+            # part upper
+            if paddle_2.ycor()+55 >= ball.ycor() >= paddle_2.ycor()+15:
+                ball.dy = 0.1
+            # part bottom
+            elif paddle_2.ycor()-15 >= ball.ycor() >= paddle_2.ycor()-55:
+                ball.dy = -0.1
+            # part middle
+            else: 
+                ball.dy = random.uniform(-0.05,0.05)
         
         # win condition
         if score_1 == score_win or score_2 == score_win:
