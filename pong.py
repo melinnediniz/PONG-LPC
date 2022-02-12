@@ -1,16 +1,18 @@
-from tkinter import mainloop
 import turtle
 import winsound
 import random
+import time
 
 # defining constants
 FONT = "Press Start 2P"
 UP_DOWN_SOUND = "assets/bounce.wav"
 SCORE_SOUND = "assets/258020__kodack__arcade-bleep-sound.wav"
+FPS = 1/60
 
 start_pg = turtle.Screen()
 start_pg.bgcolor('black')
 start_pg.setup(width=800, height=600)
+start_pg.tracer(0)
 
 
 # draw first window
@@ -21,8 +23,8 @@ def start_page():
     game_name.speed(0)
     game_name.hideturtle()
     game_name.penup()
-    game_name.color("white")
-    game_name.goto(0, 160)
+    game_name.color("#F37746")
+    game_name.goto(0, 120)
     game_name.write('PING PONG', align="center", font=(FONT, 50, 'normal'))
 
     # draw start button
@@ -64,7 +66,6 @@ def button_actions(x, y):
     global start_pg
     if -110 < x < 100 and 0 < y < 40:
         print('Start Game')
-        # winsound.PlaySound('assets/wining.wav', winsound.SND_ASYNC)
         start_pg.clear()
         main()
     elif -85 < x < 82 and -105 < y < -62:
@@ -90,7 +91,7 @@ def main():
     # scores
     score_1 = 0
     score_2 = 0
-    score_win = 10
+    score_win = 3
 
     # draw paddle 1
     paddle_1 = turtle.Turtle()
@@ -117,7 +118,7 @@ def main():
     ball.color("#8BD580")
     ball.penup()
     ball.goto(0, 0)
-    ball.dx = 0.20
+    ball.dx = 0.50
     ball.dy = 0
 
     # score head-up display
@@ -217,9 +218,8 @@ def main():
             hud.write("{} : {}".format(score_1, score_2), align="center", font=(FONT, 24, "normal"))
             winsound.PlaySound(SCORE_SOUND,  winsound.SND_ASYNC)
             ball.goto(0, random.randint(-200, 200))
-            ball.dx = 0.20
+            ball.dx = 0.50
             ball.dy = -0.05
-
 
         # collision with right wall
         if ball.xcor() > 390:
@@ -228,49 +228,49 @@ def main():
             hud.write("{} : {}".format(score_1, score_2), align="center", font=(FONT, 24, "normal"))
             winsound.PlaySound(SCORE_SOUND, winsound.SND_ASYNC)
             ball.goto(0, random.randint(-200, 200))
-            ball.dx = -0.20
+            ball.dx = -0.50
             ball.dy = -0.05
-
 
         # collision with paddle 1
         if ball.xcor() < -330 and paddle_1.ycor() + 50 > ball.ycor() > paddle_1.ycor() - 50:
-            ball.dx = 0.40
+            ball.dx = 0.50
             winsound.PlaySound(UP_DOWN_SOUND,  winsound.SND_ASYNC)
 
             # part upper
-            if paddle_1.ycor()+55 > ball.ycor() > paddle_1.ycor()+15:
+            if paddle_1.ycor() + 55 > ball.ycor() > paddle_1.ycor()+15:
                 ball.dy = 0.1
             # part bottom
-            elif paddle_1.ycor()-15 > ball.ycor() > paddle_1.ycor()-55:
+            elif paddle_1.ycor() - 15 > ball.ycor() > paddle_1.ycor()-55:
                 ball.dy = -0.1
             # part middle
             else: 
-                ball.dy = random.uniform(-0.05,0.05)
+                ball.dy = random.uniform(-0.05, 0.05)
 
         # collision with paddle 2
         if ball.xcor() > 330 and paddle_2.ycor() + 50 > ball.ycor() > paddle_2.ycor() - 50:
-            ball.dx = -0.40
+            ball.dx = -0.50
             winsound.PlaySound(UP_DOWN_SOUND,  winsound.SND_ASYNC)
 
             # part upper
-            if paddle_2.ycor()+55 >= ball.ycor() >= paddle_2.ycor()+15:
+            if paddle_2.ycor() + 55 >= ball.ycor() >= paddle_2.ycor()+15:
                 ball.dy = 0.1
             # part bottom
-            elif paddle_2.ycor()-15 >= ball.ycor() >= paddle_2.ycor()-55:
+            elif paddle_2.ycor() - 15 >= ball.ycor() >= paddle_2.ycor()-55:
                 ball.dy = -0.1
             # part middle
             else: 
-                ball.dy = random.uniform(-0.05,0.05)
+                ball.dy = random.uniform(-0.05, 0.05)
         
         # win condition
         if score_1 == score_win or score_2 == score_win:
             winner = "1P" if score_1 > score_2 else "2P"
             score_1 = score_2 = 0
-            win.write("Congrats, {} you're the winner!".format(winner), align="center", font=("Press Start 2P",
-                                                                                              24, "normal"))
+            win.write("Congrats, {} you're the winner!".format(winner), align="center", font=("Press Start 2P",                                                             15, "normal"))
+            winsound.PlaySound('assets/wining.wav', winsound.SND_ASYNC)
 
 
 if __name__ == '__main__':
 
     start_page()
-    mainloop()
+    time.sleep(FPS)
+    turtle.done()
