@@ -167,29 +167,36 @@ def main():
             y = -250
         paddle.sety(y)
 
-    # paddles movement
-    def paddle_1_up():
-        move_up(paddle_1)
+    actions = dict(
+        up_1=lambda: move_up(paddle_1),
+        down_1=lambda: move_down(paddle_1),
+        up_2=lambda: move_up(paddle_2),
+        down_2=lambda: move_down(paddle_2),
+    )
 
-    def paddle_1_down():
-        move_down(paddle_1)
+    # keyboard
+    keys_pressed = set()
+    screen.listen()
+    screen.onkeypress(lambda: keys_pressed.add('up_1'), 'w')
+    screen.onkeypress(lambda: keys_pressed.add('down_1'), "s")
+    screen.onkeypress(lambda: keys_pressed.add('up_2'), "Up")
+    screen.onkeypress(lambda: keys_pressed.add('down_2'), "Down")
 
-    def paddle_2_up():
-        move_up(paddle_2)
+    screen.onkeyrelease(lambda: keys_pressed.remove('up_1'), 'w')
+    screen.onkeyrelease(lambda: keys_pressed.remove('down_1'), "s")
+    screen.onkeyrelease(lambda: keys_pressed.remove('up_2'), "Up")
+    screen.onkeyrelease(lambda: keys_pressed.remove('down_2'), "Down")
 
-    def paddle_2_down():
-        move_down(paddle_2)
+    def listen_keypress():
+        for action in keys_pressed:
+            actions[action]()
+        screen.ontimer(listen_keypress, 1000 // 30 )
+    listen_keypress()
 
+    # exit game
     def exit_game():
         turtle.clear()
         turtle.bye()
-
-    # mapping keys
-    screen.listen()
-    screen.onkeypress(paddle_1_up, "w")
-    screen.onkeypress(paddle_1_down, "s")
-    screen.onkeypress(paddle_2_up, "Up")
-    screen.onkeypress(paddle_2_down, "Down")
     screen.onkeypress(exit_game, "space")
 
     while True:
