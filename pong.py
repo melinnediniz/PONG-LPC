@@ -129,6 +129,15 @@ def main():
     hud.hideturtle()
     hud.goto(0, 250)
     hud.write("0 : 0", align="center", font=(FONT, 24, "normal"))
+    
+    # draw win screen
+    win = turtle.Turtle()
+    win.speed(0)
+    win.shape("square")
+    win.color("white")
+    win.penup()
+    win.hideturtle()
+    win.goto(0, 0)
 
     # draw exit warning
     exit_warning = turtle.Turtle()
@@ -251,7 +260,10 @@ def main():
         
         # win condition
         if score_1 == score_win or score_2 == score_win:
+            winner = "1P" if score_1 > score_2 else "2P"
             score_1 = score_2 = 0
+            win.write("Congrats, {} you're the winner!".format(winner), align="center", font=("Press Start 2P",
+                                                                                              24, "normal"))
 
 
 if __name__ == '__main__':
