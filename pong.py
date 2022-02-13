@@ -5,7 +5,7 @@ from functions import *
 # defining constants
 FONT = "Press Start 2P"
 UP_DOWN_SOUND = "assets/bounce.wav"
-SCORE_SOUND = "assets/258020__kodack__arcade-bleep-sound.wav"
+SCORE_SOUND = "assets/341695__projectsu012__coins-1.wav"
 FPS = 1 / 60
 
 # defining global variables
@@ -13,6 +13,7 @@ level = 1
 paddle_width = 5
 paddle_collision = 50
 ball_dx = 2
+score_win = 3
 
 # draw main screen
 main_screen = turtle.Screen()
@@ -49,6 +50,7 @@ def button_actions(x, y):
     global main_screen
     if -110 < x < 100 and 0 < y < 40:
         print('Start Game')
+        play_sound('assets/403016__inspectorj__ui-confirmation-alert-c1.wav')
         main_screen.clear()
         level_select()
     elif -85 < x < 82 and -105 < y < -62:
@@ -74,23 +76,28 @@ def level_select():
     exit_game()
 
     def level_choosed(x, y):
+        global ball_dx, paddle_width, score_win
         if -100 < x < 85:
             if 10 < y < 45:
                 print(x, y)
                 print('Level 1')
+                ball_dx = 1.5
             elif -50 < y < -10:
                 print(x, y)
                 print('Level 2')
-
-            elif -115 < y < -90:
+                ball_dx = 2
+            elif -110 < y < -80:
                 print(x, y)
                 print('Level 3')
+                ball_dx = 2.5
+                paddle_width = 3.5
+                score_win = 15
+            play_sound('assets/403016__inspectorj__ui-confirmation-alert-c1.wav')
             main_screen.clear()
             play_game()
 
     main_screen.listen()
     main_screen.onscreenclick(level_choosed, 1)
-
 
 def play_game():
     # exit game warning
@@ -108,14 +115,13 @@ def play_game():
     # scores
     score_1 = 0
     score_2 = 0
-    score_win = 3
 
     # draw paddle 1
     paddle_1 = turtle.Turtle()
     paddle_1.speed(0)
     paddle_1.shape("square")
     paddle_1.color("#CD7011")
-    paddle_1.shapesize(stretch_wid=5, stretch_len=1)
+    paddle_1.shapesize(stretch_wid=paddle_width, stretch_len=1)
     paddle_1.penup()
     paddle_1.goto(-350, 0)
 
@@ -124,7 +130,7 @@ def play_game():
     paddle_2.speed(0)
     paddle_2.shape("square")
     paddle_2.color("#16899E")
-    paddle_2.shapesize(stretch_wid=5, stretch_len=1)
+    paddle_2.shapesize(stretch_wid=paddle_width, stretch_len=1)
     paddle_2.penup()
     paddle_2.goto(350, 0)
 
@@ -135,10 +141,12 @@ def play_game():
     ball.color("#8BD580")
     ball.penup()
     ball.goto(0, 0)
-    ball.dx = 0.50
+    ball.dx = ball_dx
     ball.dy = 0
 
     # score head-up display
+    draw_text(xcor=-140, ycor=255, color='#CD7011', msg='1P', fontsize=20)
+    draw_text(xcor=160, ycor=255, color='#16899E', msg='2P', fontsize=20)
     hud = turtle.Turtle()
     hud.speed(0)
     hud.shape("square")
@@ -203,16 +211,6 @@ def play_game():
             ball.dy *= -1
             winsound.PlaySound(UP_DOWN_SOUND, winsound.SND_ASYNC)
 
-        # collision with left wall
-        if ball.xcor() < -390:
-            score_2 += 1
-            hud.clear()
-            hud.write("{} : {}".format(score_1, score_2), align="center", font=(FONT, 24, "normal"))
-            play_sound(SCORE_SOUND)
-            ball.goto(0, random.randint(-200, 200))
-            ball.dx = 0.50
-            ball.dy = -0.05
-
         # collision with right wall
         if ball.xcor() > 390:
             score_1 += 1
@@ -220,38 +218,48 @@ def play_game():
             hud.write("{} : {}".format(score_1, score_2), align="center", font=(FONT, 24, "normal"))
             play_sound(SCORE_SOUND)
             ball.goto(0, random.randint(-200, 200))
-            ball.dx = -0.50
-            ball.dy = -0.05
+            ball.dx = -ball_dx
+            ball.dy = -0.4
+
+        # collision with left wall
+        if ball.xcor() < -390:
+            score_2 += 1
+            hud.clear()
+            hud.write("{} : {}".format(score_1, score_2), align="center", font=(FONT, 24, "normal"))
+            play_sound(SCORE_SOUND)
+            ball.goto(0, random.randint(-200, 200))
+            ball.dx = ball_dx
+            ball.dy = -0.4
 
         # collision with paddle 1
-        if ball.xcor() < -330 and paddle_1.ycor() + 50 > ball.ycor() > paddle_1.ycor() - 50:
-            ball.dx = 0.50
+        if ball.xcor() < -330 and paddle_1.ycor() + 55 > ball.ycor() > paddle_1.ycor() - 55:
+            ball.dx = ball_dx
             play_sound(UP_DOWN_SOUND)
 
             # part upper
             if paddle_1.ycor() + 55 > ball.ycor() > paddle_1.ycor() + 15:
-                ball.dy = 0.1
+                ball.dy = 0.5
             # part bottom
             elif paddle_1.ycor() - 15 > ball.ycor() > paddle_1.ycor() - 55:
-                ball.dy = -0.1
+                ball.dy = -0.5
             # part middle
             else:
                 ball.dy = random.uniform(-0.05, 0.05)
 
         # collision with paddle 2
-        if ball.xcor() > 330 and paddle_2.ycor() + 50 > ball.ycor() > paddle_2.ycor() - 50:
-            ball.dx = -0.50
+        if ball.xcor() > 330 and paddle_2.ycor() + 55 > ball.ycor() > paddle_2.ycor() - 55:
+            ball.dx = -ball_dx
             play_sound(UP_DOWN_SOUND)
 
             # part upper
             if paddle_2.ycor() + 55 >= ball.ycor() >= paddle_2.ycor() + 15:
-                ball.dy = 0.1
+                ball.dy = 0.5
             # part bottom
             elif paddle_2.ycor() - 15 >= ball.ycor() >= paddle_2.ycor() - 55:
-                ball.dy = -0.1
+                ball.dy = -0.5
             # part middle
             else:
-                ball.dy = random.uniform(-0.05, 0.05)
+                ball.dy = random.uniform(-0.05, 0.0)
 
         # win condition
         if score_1 == score_win or score_2 == score_win:

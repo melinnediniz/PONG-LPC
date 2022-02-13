@@ -2,6 +2,7 @@ import winsound
 import turtle
 from pong import FONT
 
+game_pause = False
 
 # play sound function
 def play_sound(sound_name):
@@ -19,11 +20,6 @@ def draw_button(xcor, ycor, color, msg, fontsize):
     button.write(msg, align='center', font=(FONT, fontsize, 'normal'))
 
 
-def exit_game():
-    # draw exit warning
-    turtle.onkeypress(turtle.bye, "space")
-
-
 def draw_text(xcor, ycor, color, msg, fontsize):
     text = turtle.Turtle()
     text.speed(0)
@@ -32,6 +28,12 @@ def draw_text(xcor, ycor, color, msg, fontsize):
     text.penup()
     text.goto(xcor, ycor)
     text.write(msg, align="center", font=(FONT, fontsize, "normal"))
+
+
+def pause():
+    global game_pause
+    game_pause = True
+    
 
 
 # move paddle up
@@ -52,3 +54,8 @@ def move_down(paddle):
     else:
         y = -250
     paddle.sety(y)
+
+
+def exit_game():
+    # draw exit warning
+    turtle.onkeypress(turtle.bye, "space")
