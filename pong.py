@@ -160,7 +160,7 @@ def play_game():
     win = turtle.Turtle()
     win.speed(0)
     win.shape("square")
-    win.color("yellow")
+    win.color("green")
     win.penup()
     win.hideturtle()
     win.goto(0, 0)
