@@ -1,42 +1,35 @@
-import turtle
-import winsound
 import random
 import time
+from functions import *
 
 # defining constants
 FONT = "Press Start 2P"
 UP_DOWN_SOUND = "assets/bounce.wav"
 SCORE_SOUND = "assets/258020__kodack__arcade-bleep-sound.wav"
-FPS = 1/60
+FPS = 1 / 60
 
-start_pg = turtle.Screen()
-start_pg.bgcolor('black')
-start_pg.setup(width=800, height=600)
-start_pg.tracer(0)
+# defining global variables
+level = 1
+paddle_width = 5
+paddle_collision = 50
+ball_dx = 2
+
+# draw main screen
+main_screen = turtle.Screen()
+main_screen.bgcolor('black')
+main_screen.title("PING PONG")
+main_screen.setup(width=800, height=600)
+main_screen.tracer(0)
 
 
 # draw first window
 def start_page():
-    
-    # draw game name in the top
-    game_name = turtle.Turtle()
-    game_name.speed(0)
-    game_name.hideturtle()
-    game_name.penup()
-    game_name.color("#F37746")
-    game_name.goto(0, 120)
-    game_name.write('PING PONG', align="center", font=(FONT, 50, 'normal'))
-
-    # draw start button
-    start_button = turtle.Turtle()
-    start_button.speed(0)
-    start_button.hideturtle()
-    start_button.pensize(4)
-    start_button.color('#BFDEB4')
-    start_button.penup()
-    start_button.goto(-112, -20)
+    # draw game name on the top
+    draw_text(xcor=0, ycor=120, color="#F37746", msg="PING PONG", fontsize=50)
 
     # draw button borders
+    start_button = turtle.Turtle()
+    start_button.goto(-112, -20)
     start_button.fillcolor('#0A1B08')
     start_button.begin_fill()
     for _ in range(2):
@@ -46,28 +39,18 @@ def start_page():
         start_button.forward(70)
         start_button.left(90)
     start_button.end_fill()
-    
-    start_button.penup()
-    start_button.goto(0, 0)
-    start_button.write('Start Game', align='center', font=(FONT, 15, 'normal'))
 
-    exit_button = turtle.Turtle()
-    exit_button.speed(0)
-    exit_button.hideturtle()
-    exit_button.pensize(4)
-    exit_button.color('red')
-    exit_button.penup()
-    exit_button.goto(0, -100)
-    exit_button.write('Exit Game', align='center', font=(FONT, 15, 'normal'))
+    draw_button(xcor=0, ycor=0, color='#BFDEB4', msg='Start Game', fontsize=15)
+    draw_button(xcor=0, ycor=-100, color='red', msg='Exit Game', fontsize=15)
 
 
 # function to start or exit game
 def button_actions(x, y):
-    global start_pg
+    global main_screen
     if -110 < x < 100 and 0 < y < 40:
         print('Start Game')
-        start_pg.clear()
-        main()
+        main_screen.clear()
+        level_select()
     elif -85 < x < 82 and -105 < y < -62:
         print('exit game')
         turtle.bye()
@@ -78,16 +61,50 @@ turtle.listen()
 turtle.onscreenclick(button_actions, 1)
 
 
-def main():
+def level_select():
+    main_screen.bgcolor('black')
+    # draw game name in the top
+    draw_text(xcor=0, ycor=120, color="#F37746", msg="CHOOSE LEVEL", fontsize=36)
 
-    # draw window    
-    screen = turtle.Screen()
-    screen.title("My Pong")
-    screen.bgcolor("black")
-    screen.setup(width=800, height=600)
-    screen.tracer(0)
-    screen.bgpic('assets/game_background.png')
-    
+    draw_button(0, 0, '#17B119', 'EASY', 20)
+    draw_button(0, -60, '#E5EB40', 'MEDIUM', 20)
+    draw_button(0, -120, '#FC7614', 'HARD', 20)
+
+    draw_text(0, -295, "red", "PRESS 'SPACE' TO EXIT", 10)
+    exit_game()
+
+    def level_choosed(x, y):
+        if -100 < x < 85:
+            if 10 < y < 45:
+                print(x, y)
+                print('Level 1')
+            elif -50 < y < -10:
+                print(x, y)
+                print('Level 2')
+
+            elif -115 < y < -90:
+                print(x, y)
+                print('Level 3')
+            main_screen.clear()
+            play_game()
+
+    main_screen.listen()
+    main_screen.onscreenclick(level_choosed, 1)
+
+
+def play_game():
+    # exit game warning
+    draw_text(0, -295, "red", "PRESS 'SPACE' TO EXIT", 10)
+    exit_game()
+
+    # draw window
+    game_screen = turtle.Screen()
+    game_screen.title("My Pong")
+    game_screen.bgcolor("black")
+    game_screen.setup(width=800, height=600)
+    game_screen.tracer(0)
+    game_screen.bgpic('assets/game_background.png')
+
     # scores
     score_1 = 0
     score_2 = 0
@@ -128,9 +145,9 @@ def main():
     hud.color("white")
     hud.penup()
     hud.hideturtle()
-    hud.goto(0, 250)
+    hud.goto(6, 250)
     hud.write("0 : 0", align="center", font=(FONT, 24, "normal"))
-    
+
     # draw win screen
     win = turtle.Turtle()
     win.speed(0)
@@ -139,33 +156,6 @@ def main():
     win.penup()
     win.hideturtle()
     win.goto(0, 0)
-
-    # draw exit warning
-    exit_warning = turtle.Turtle()
-    exit_warning.speed(0)
-    exit_warning.hideturtle()
-    exit_warning.color("red")
-    exit_warning.penup()
-    exit_warning.goto(0, -295)
-    exit_warning.write("PRESS 'SPACE' TO EXIT", align="center", font=("Small Fonts", 12, "normal"))
-
-    # move paddle up
-    def move_up(paddle):
-        y = paddle.ycor()
-        if y < 250:
-            y += 20
-        else:
-            y = 250
-        paddle.sety(y)
-
-    # move paddle down
-    def move_down(paddle):
-        y = paddle.ycor()
-        if y > -250:
-            y += -20
-        else:
-            y = -250
-        paddle.sety(y)
 
     actions = dict(
         up_1=lambda: move_up(paddle_1),
@@ -176,31 +166,26 @@ def main():
 
     # keyboard
     keys_pressed = set()
-    screen.listen()
-    screen.onkeypress(lambda: keys_pressed.add('up_1'), 'w')
-    screen.onkeypress(lambda: keys_pressed.add('down_1'), "s")
-    screen.onkeypress(lambda: keys_pressed.add('up_2'), "Up")
-    screen.onkeypress(lambda: keys_pressed.add('down_2'), "Down")
+    game_screen.listen()
+    game_screen.onkeypress(lambda: keys_pressed.add('up_1'), 'w')
+    game_screen.onkeypress(lambda: keys_pressed.add('down_1'), "s")
+    game_screen.onkeypress(lambda: keys_pressed.add('up_2'), "Up")
+    game_screen.onkeypress(lambda: keys_pressed.add('down_2'), "Down")
 
-    screen.onkeyrelease(lambda: keys_pressed.remove('up_1'), 'w')
-    screen.onkeyrelease(lambda: keys_pressed.remove('down_1'), "s")
-    screen.onkeyrelease(lambda: keys_pressed.remove('up_2'), "Up")
-    screen.onkeyrelease(lambda: keys_pressed.remove('down_2'), "Down")
+    game_screen.onkeyrelease(lambda: keys_pressed.remove('up_1'), 'w')
+    game_screen.onkeyrelease(lambda: keys_pressed.remove('down_1'), "s")
+    game_screen.onkeyrelease(lambda: keys_pressed.remove('up_2'), "Up")
+    game_screen.onkeyrelease(lambda: keys_pressed.remove('down_2'), "Down")
 
     def listen_keypress():
         for action in keys_pressed:
             actions[action]()
-        screen.ontimer(listen_keypress, 1000 // 30 )
+        game_screen.ontimer(listen_keypress, 1000 // 30)
+
     listen_keypress()
 
-    # exit game
-    def exit_game():
-        turtle.clear()
-        turtle.bye()
-    screen.onkeypress(exit_game, "space")
-
     while True:
-        screen.update()
+        game_screen.update()
 
         # ball move
         ball.setx(ball.xcor() + ball.dx)
@@ -210,20 +195,20 @@ def main():
         if ball.ycor() > 285:
             ball.sety(285)
             ball.dy *= -1
-            winsound.PlaySound(UP_DOWN_SOUND,  winsound.SND_ASYNC)
+            winsound.PlaySound(UP_DOWN_SOUND, winsound.SND_ASYNC)
 
         # collision with down wall
         if ball.ycor() < -280:
             ball.sety(-280)
             ball.dy *= -1
-            winsound.PlaySound(UP_DOWN_SOUND,  winsound.SND_ASYNC)
+            winsound.PlaySound(UP_DOWN_SOUND, winsound.SND_ASYNC)
 
         # collision with left wall
         if ball.xcor() < -390:
             score_2 += 1
             hud.clear()
             hud.write("{} : {}".format(score_1, score_2), align="center", font=(FONT, 24, "normal"))
-            winsound.PlaySound(SCORE_SOUND,  winsound.SND_ASYNC)
+            play_sound(SCORE_SOUND)
             ball.goto(0, random.randint(-200, 200))
             ball.dx = 0.50
             ball.dy = -0.05
@@ -233,7 +218,7 @@ def main():
             score_1 += 1
             hud.clear()
             hud.write("{} : {}".format(score_1, score_2), align="center", font=(FONT, 24, "normal"))
-            winsound.PlaySound(SCORE_SOUND, winsound.SND_ASYNC)
+            play_sound(SCORE_SOUND)
             ball.goto(0, random.randint(-200, 200))
             ball.dx = -0.50
             ball.dy = -0.05
@@ -241,43 +226,43 @@ def main():
         # collision with paddle 1
         if ball.xcor() < -330 and paddle_1.ycor() + 50 > ball.ycor() > paddle_1.ycor() - 50:
             ball.dx = 0.50
-            winsound.PlaySound(UP_DOWN_SOUND,  winsound.SND_ASYNC)
+            play_sound(UP_DOWN_SOUND)
 
             # part upper
-            if paddle_1.ycor() + 55 > ball.ycor() > paddle_1.ycor()+15:
+            if paddle_1.ycor() + 55 > ball.ycor() > paddle_1.ycor() + 15:
                 ball.dy = 0.1
             # part bottom
-            elif paddle_1.ycor() - 15 > ball.ycor() > paddle_1.ycor()-55:
+            elif paddle_1.ycor() - 15 > ball.ycor() > paddle_1.ycor() - 55:
                 ball.dy = -0.1
             # part middle
-            else: 
+            else:
                 ball.dy = random.uniform(-0.05, 0.05)
 
         # collision with paddle 2
         if ball.xcor() > 330 and paddle_2.ycor() + 50 > ball.ycor() > paddle_2.ycor() - 50:
             ball.dx = -0.50
-            winsound.PlaySound(UP_DOWN_SOUND,  winsound.SND_ASYNC)
+            play_sound(UP_DOWN_SOUND)
 
             # part upper
-            if paddle_2.ycor() + 55 >= ball.ycor() >= paddle_2.ycor()+15:
+            if paddle_2.ycor() + 55 >= ball.ycor() >= paddle_2.ycor() + 15:
                 ball.dy = 0.1
             # part bottom
-            elif paddle_2.ycor() - 15 >= ball.ycor() >= paddle_2.ycor()-55:
+            elif paddle_2.ycor() - 15 >= ball.ycor() >= paddle_2.ycor() - 55:
                 ball.dy = -0.1
             # part middle
-            else: 
+            else:
                 ball.dy = random.uniform(-0.05, 0.05)
-        
+
         # win condition
         if score_1 == score_win or score_2 == score_win:
             winner = "1P" if score_1 > score_2 else "2P"
             score_1 = score_2 = 0
-            win.write("Congrats, {} you're the winner!".format(winner), align="center", font=("Press Start 2P",                                                             15, "normal"))
-            winsound.PlaySound('assets/wining.wav', winsound.SND_ASYNC)
+            play_sound("assets/wining.wav")
+            win.write("Congrats, {} you're the winner!".format(winner), align="center",
+                      font=(FONT, 15, "normal"))
 
 
 if __name__ == '__main__':
-
     start_page()
     time.sleep(FPS)
     turtle.done()
