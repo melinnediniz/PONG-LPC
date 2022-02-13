@@ -160,7 +160,7 @@ def play_game():
     win = turtle.Turtle()
     win.speed(0)
     win.shape("square")
-    win.color("white")
+    win.color("yellow")
     win.penup()
     win.hideturtle()
     win.goto(0, 0)
@@ -264,7 +264,8 @@ def play_game():
         # win condition
         if score_1 == score_win or score_2 == score_win:
             winner = "1P" if score_1 > score_2 else "2P"
-            score_1 = score_2 = 0
+            ball.dx = 0
+            ball.dy = 0
             play_sound("assets/wining.wav")
             win.write("Congrats, {} you're the winner!".format(winner), align="center",
                       font=(FONT, 15, "normal"))
