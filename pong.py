@@ -9,7 +9,7 @@ SCORE_SOUND = "assets/341695__projectsu012__coins-1.wav"
 FPS = 1 / 60
 
 # defining global variables
-level = 1
+single_play = False
 paddle_width = 5
 paddle_collision = 50
 ball_dx = 2
@@ -52,7 +52,7 @@ def button_actions(x, y):
         print('Start Game')
         play_sound('assets/403016__inspectorj__ui-confirmation-alert-c1.wav')
         main_screen.clear()
-        level_select()
+        select_mode()
     elif -85 < x < 82 and -105 < y < -62:
         print('exit game')
         turtle.bye()
@@ -61,6 +61,37 @@ def button_actions(x, y):
 # calling the function
 turtle.listen()
 turtle.onscreenclick(button_actions, 1)
+
+
+def select_mode():
+    main_screen.bgcolor('black')
+    draw_text(xcor=0, ycor=120, color="#F37746", msg="SELECT MODE", fontsize=36)
+
+    draw_button(0, 0, '#17B119', 'MULTIPLAYER', 15)
+    draw_button(0, -60, '#E5EB40', 'SINGLE PLAYER', 15)
+
+    draw_text(0, -295, "red", "PRESS 'SPACE' TO EXIT", 10)
+    exit_game()
+
+    def chosen_mode(x, y):
+        global single_play
+        if -115 < x < 110:
+            if 10 < y < 30:
+                print(x, y)
+                print('Multiplayer')
+                single_play = False
+                print(f'npc joga? {single_play}')
+                main_screen.clear()
+                level_select()
+            elif -50 < y < -35:
+                print(x, y)
+                print('Single player')
+                single_play = True
+                print(f'npc joga? {single_play}')
+
+        play_sound('assets/403016__inspectorj__ui-confirmation-alert-c1.wav')
+    main_screen.listen()
+    main_screen.onscreenclick(chosen_mode, 1)
 
 
 def level_select():
@@ -75,7 +106,7 @@ def level_select():
     draw_text(0, -295, "red", "PRESS 'SPACE' TO EXIT", 10)
     exit_game()
 
-    def level_choosed(x, y):
+    def chosen_level(x, y):
         global ball_dx, paddle_width, score_win
         if -100 < x < 85:
             if 10 < y < 45:
@@ -97,7 +128,8 @@ def level_select():
             play_game()
 
     main_screen.listen()
-    main_screen.onscreenclick(level_choosed, 1)
+    main_screen.onscreenclick(chosen_level, 1)
+
 
 def play_game():
     # exit game warning
@@ -203,13 +235,13 @@ def play_game():
         if ball.ycor() > 285:
             ball.sety(285)
             ball.dy *= -1
-            winsound.PlaySound(UP_DOWN_SOUND, winsound.SND_ASYNC)
+            play_sound(UP_DOWN_SOUND)
 
         # collision with down wall
         if ball.ycor() < -280:
             ball.sety(-280)
             ball.dy *= -1
-            winsound.PlaySound(UP_DOWN_SOUND, winsound.SND_ASYNC)
+            play_sound(UP_DOWN_SOUND)
 
         # collision with right wall
         if ball.xcor() > 390:
@@ -266,8 +298,8 @@ def play_game():
             winner = "1P" if score_1 > score_2 else "2P"
             ball.dx = 0
             ball.dy = 0
-            play_sound("assets/wining.wav")
-            win.write("Congrats, {} you're the winner!".format(winner), align="center",
+
+            win.write("CONGRATS, {} YOU'RE THE WINNER!".format(winner), align="center",
                       font=(FONT, 15, "normal"))
 
 
