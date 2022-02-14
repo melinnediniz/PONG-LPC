@@ -157,8 +157,8 @@ def play_game():
     game_screen.bgpic('assets/game_background.png')
 
     # scores
-    score_1 = 0
-    score_2 = 0
+    score_1 = 4
+    score_2 = 4
 
     # draw paddle 1
     paddle_1 = turtle.Turtle()
@@ -234,15 +234,11 @@ def play_game():
             PAUSED = False
 
     def reset():
-        if score_1 < score_win and score_2 < score_win:
-            win.clear()
+        if score_1 == score_win or score_2 == score_win:
             game_screen.clear()
             ball.dx = 0
             ball.dy = 0
             select_mode()
-        else:
-            print('No reset')
-            draw_text(0, -100, 'gray', "PRESS 'ESC' TO EXIT", 15)
 
     # keyboard
     keys_pressed = set()
@@ -356,7 +352,8 @@ def play_game():
             paddle_1.hideturtle(), paddle_2.hideturtle()
             win.write("CONGRATS, {} YOU'RE THE WINNER!".format(winner), align="center",
                       font=(FONT, 18, "normal"))
-
+            draw_text(0, -100, 'gray', "PRESS 'R' TO RESET", 15)
+            turtle.done()
 
 if __name__ == '__main__':
     start_page()
