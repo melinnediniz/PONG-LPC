@@ -320,7 +320,7 @@ def play_game():
                 ball.dy = -10
             # part middle
             else:
-                ball.dy = random.uniform(-0.05, 0.05)
+                ball.dy = random.uniform(-2, 2)
 
         # collision with paddle 2
         if ball.xcor() > 330 and paddle_2.ycor() + 55 > ball.ycor() > paddle_2.ycor() - 55:
@@ -335,7 +335,7 @@ def play_game():
                 ball.dy = -10
             # part middle
             else:
-                ball.dy = random.uniform(-0.05, 0.0)
+                ball.dy = random.uniform(-2, 2)
         
         
 
