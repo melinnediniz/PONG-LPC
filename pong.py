@@ -5,16 +5,17 @@ from functions import *
 # defining constants
 FONT = "Press Start 2P"
 UP_DOWN_SOUND = "assets/bounce.wav"
-SCORE_SOUND = "assets/341695__projectsu012__coins-1.wav"
+SCORE_SOUND = "assets/score.wav"
+BUTTON_SOUND = "assets/button.wav"
 FPS = 1 / 60
 
 # defining global variables
 single_play = False
-nivel = ''
+level = ''
 paddle_width = 5
 paddle_collision = 50
 ball_dx = 1
-score_win = 3
+score_win = 5
 
 # draw main screen
 main_screen = turtle.Screen()
@@ -51,7 +52,7 @@ def button_actions(x, y):
     global main_screen
     if -110 < x < 100 and 0 < y < 40:
         print('Start Game')
-        play_sound('assets/403016__inspectorj__ui-confirmation-alert-c1.wav')
+        play_sound(BUTTON_SOUND)
         main_screen.clear()
         select_mode()
     elif -85 < x < 82 and -105 < y < -62:
@@ -71,7 +72,7 @@ def select_mode():
     draw_button(0, 0, '#17B119', 'MULTIPLAYER', 15)
     draw_button(0, -60, '#E5EB40', 'SINGLE PLAYER', 15)
 
-    draw_text(0, -295, "red", "PRESS 'SPACE' TO EXIT", 10)
+    draw_text(0, -295, "red", "PRESS 'ESC' TO EXIT", 10)
     exit_game()
 
     def chosen_mode(x, y):
@@ -92,7 +93,7 @@ def select_mode():
                 main_screen.clear()
                 level_select()
 
-        play_sound('assets/403016__inspectorj__ui-confirmation-alert-c1.wav')
+        play_sound(BUTTON_SOUND)
     main_screen.listen()
     main_screen.onscreenclick(chosen_mode, 1)
 
@@ -106,30 +107,30 @@ def level_select():
     draw_button(0, -60, '#E5EB40', 'MEDIUM', 20)
     draw_button(0, -120, '#FC7614', 'HARD', 20)
 
-    draw_text(0, -295, "red", "PRESS 'SPACE' TO EXIT", 10)
+    draw_text(0, -295, "red", "PRESS 'ESC' TO EXIT", 10)
     exit_game()
 
     def chosen_level(x, y):
-        global ball_dx, paddle_width, score_win, nivel
+        global ball_dx, paddle_width, score_win, level
         if -100 < x < 85:
             if 10 < y < 45:
                 print(x, y)
                 print('Level 1')
-                nivel = 'easy'
-                ball_dx = 10
+                level = 'easy'
+                ball_dx = 5
             elif -50 < y < -10:
                 print(x, y)
                 print('Level 2')
-                nivel='medium'
-                ball_dx = 16
+                level = 'medium'
+                ball_dx = 10
             elif -110 < y < -80:
                 print(x, y)
                 print('Level 3')
-                nivel='hard'
-                ball_dx = 22
+                level = 'hard'
+                ball_dx = 15
                 paddle_width = 3.5
-                score_win = 15
-            play_sound('assets/403016__inspectorj__ui-confirmation-alert-c1.wav')
+                score_win = 10
+            play_sound(BUTTON_SOUND)
             main_screen.clear()
             play_game()
 
@@ -139,10 +140,10 @@ def level_select():
 
 def play_game():
     # exit game warning
-    draw_text(0, -295, "red", "PRESS 'SPACE' TO EXIT", 10)
+    draw_text(0, -295, "red", "PRESS 'ESC' TO EXIT", 10)
     exit_game()
 
-    print(nivel)
+    print(level)
     # draw window
     game_screen = turtle.Screen()
     game_screen.title("My Pong")
@@ -219,7 +220,7 @@ def play_game():
     game_screen.onkeyrelease(lambda: keys_pressed.remove('up_1'), 'w')
     game_screen.onkeyrelease(lambda: keys_pressed.remove('down_1'), "s")
 
-    if single_play != True:
+    if not single_play:
         game_screen.onkeypress(lambda: keys_pressed.add('up_2'), "Up")
         game_screen.onkeypress(lambda: keys_pressed.add('down_2'), "Down")
         game_screen.onkeyrelease(lambda: keys_pressed.remove('up_2'), "Up")
@@ -235,10 +236,9 @@ def play_game():
     def npc():
         if ball.xcor() > -80:
             if paddle_2.ycor()-20 > ball.ycor():
-                move_down(paddle_2, single_play=True, nivel=nivel)
+                move_down(paddle_2, single_play=True, level=level)
             if paddle_2.ycor()+20 < ball.ycor():
-                move_up(paddle_2, single_play=True, nivel=nivel)
-
+                move_up(paddle_2, single_play=True, level=level)
 
     while True:
         time.sleep(FPS)
@@ -265,7 +265,10 @@ def play_game():
             score_1 += 1
             hud.clear()
             hud.write("{} : {}".format(score_1, score_2), align="center", font=(FONT, 24, "normal"))
-            play_sound(SCORE_SOUND)
+            if score_1 == score_win or score_2 == score_win:
+                play_sound('assets/wining.wav')
+            else:
+                play_sound(SCORE_SOUND)
             ball.goto(0, random.randint(-200, 200))
             ball.dx = -ball_dx/2
             ball.dy = -0.4
@@ -275,7 +278,10 @@ def play_game():
             score_2 += 1
             hud.clear()
             hud.write("{} : {}".format(score_1, score_2), align="center", font=(FONT, 24, "normal"))
-            play_sound(SCORE_SOUND)
+            if score_1 == score_win or score_2 == score_win:
+                play_sound('assets/wining.wav')
+            else:
+                play_sound(SCORE_SOUND)
             ball.goto(0, random.randint(-200, 200))
             ball.dx = ball_dx/2
             ball.dy = -0.4
@@ -319,7 +325,9 @@ def play_game():
             winner = "1P" if score_1 > score_2 else "2P"
             ball.dx = 0
             ball.dy = 0
-
+            ball.hideturtle()
+            paddle_1.hideturtle()
+            paddle_2.hideturtle()
             win.write("CONGRATS, {} YOU'RE THE WINNER!".format(winner), align="center",
                       font=(FONT, 15, "normal"))
 

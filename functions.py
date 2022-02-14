@@ -30,16 +30,16 @@ def draw_text(xcor, ycor, color, msg, fontsize):
 
 
 # move paddle up
-def move_up(paddle, single_play=False, nivel=''):
+def move_up(paddle, single_play=False, level=''):
     y = paddle.ycor()
     if y < 250:
         if single_play:
-                if nivel == 'easy':
-                    y += 10
-                if nivel == 'medium':
-                    y += 15
-                if nivel == 'hard':
-                    y += 15
+            if level == 'easy':
+                y += 8.5
+            if level == 'medium':
+                y += 14
+            if level == 'hard':
+                y += 16
         else:
             y += 50
     else:
@@ -48,16 +48,16 @@ def move_up(paddle, single_play=False, nivel=''):
 
 
 # move paddle down
-def move_down(paddle, single_play=False, nivel=''):
+def move_down(paddle, single_play=False, level=''):
     y = paddle.ycor()
     if y > -250:
         if single_play:
-            if nivel == 'easy':
-                y += -10
-            if nivel == 'medium':
-                y += -15
-            if nivel == 'hard':
-                y += -15
+            if level == 'easy':
+                y += -8.5
+            if level == 'medium':
+                y += -14
+            if level == 'hard':
+                y += -16
         else:
             y += -50
     else:
@@ -67,12 +67,11 @@ def move_down(paddle, single_play=False, nivel=''):
 
 def exit_game():
     # draw exit warning
-    turtle.onkeypress(turtle.bye, "space")
+    turtle.onkeypress(turtle.bye, "Escape")
+    print('Exit game')
 
 
 def reset_game():
     # draw_text(xcor=0, ycor=-200, color='blue', msg="PRESS 'R' TO RESET", fontsize=15)
     main_screen.clear()
     start_page()
-
-
