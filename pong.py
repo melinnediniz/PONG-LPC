@@ -144,6 +144,10 @@ def play_game():
     exit_game()
 
     print(level)
+
+    global PAUSED 
+    PAUSED = False
+    
     # draw window
     game_screen = turtle.Screen()
     game_screen.title("My Pong")
@@ -206,15 +210,33 @@ def play_game():
     win.goto(0, 0)
 
     actions = dict(
-        up_1=lambda: move_up(paddle_1),
-        down_1=lambda: move_down(paddle_1),
-        up_2=lambda: move_up(paddle_2),
-        down_2=lambda: move_down(paddle_2),
+        up_1=lambda: move_up(paddle_1, is_paused=PAUSED),
+        down_1=lambda: move_down(paddle_1, is_paused=PAUSED),
+        up_2=lambda: move_up(paddle_2, is_paused=PAUSED),
+        down_2=lambda: move_down(paddle_2, is_paused=PAUSED),
     )
+
+    pause_text = turtle.Turtle()
+    pause_text.hideturtle()
+    def pause():
+        global PAUSED
+        if not PAUSED:
+            pause_text.shape('square')
+            pause_text.color('red')
+            pause_text.goto(0, 0)
+            pause_text.write("PAUSED", align='center', font=(FONT , 24))
+            pause_text.penup()
+            PAUSED = True
+        else:
+            pause_text.clear()
+            PAUSED = False
 
     # keyboard
     keys_pressed = set()
     game_screen.listen()
+
+    game_screen.onkeypress(pause, 'p')
+
     game_screen.onkeypress(lambda: keys_pressed.add('up_1'), 'w')
     game_screen.onkeypress(lambda: keys_pressed.add('down_1'), "s")
     game_screen.onkeyrelease(lambda: keys_pressed.remove('up_1'), 'w')
@@ -233,20 +255,19 @@ def play_game():
 
     listen_keypress()
 
-    def npc():
-        if ball.xcor() > -80:
-            if paddle_2.ycor()-20 > ball.ycor():
-                move_down(paddle_2, single_play=True, level=level)
-            if paddle_2.ycor()+20 < ball.ycor():
-                move_up(paddle_2, single_play=True, level=level)
 
     while True:
         time.sleep(FPS)
         game_screen.update()
 
-        # ball move
-        ball.setx(ball.xcor() + ball.dx)
-        ball.sety(ball.ycor() + ball.dy)
+        if not PAUSED:
+            # ball move
+            ball.setx(ball.xcor() + ball.dx)
+            ball.sety(ball.ycor() + ball.dy)
+
+            # check mode game
+            if single_play:
+                npc(ball, paddle_2, level)
 
         # collision with top wall
         if ball.ycor() > 285:
@@ -316,9 +337,7 @@ def play_game():
             else:
                 ball.dy = random.uniform(-0.05, 0.0)
         
-        # check mode game
-        if single_play:
-            npc()
+        
 
         # win condition
         if score_1 == score_win or score_2 == score_win:

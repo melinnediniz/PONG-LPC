@@ -30,39 +30,48 @@ def draw_text(xcor, ycor, color, msg, fontsize):
 
 
 # move paddle up
-def move_up(paddle, single_play=False, level=''):
-    y = paddle.ycor()
-    if y < 250:
-        if single_play:
-            if level == 'easy':
-                y += 8.5
-            if level == 'medium':
-                y += 14
-            if level == 'hard':
-                y += 16
+def move_up(paddle, single_play=False, level='', is_paused=False):
+    if not is_paused:
+        y = paddle.ycor()
+        if y < 250:
+            if single_play:
+                if level == 'easy':
+                    y += 8.5
+                if level == 'medium':
+                    y += 14
+                if level == 'hard':
+                    y += 16
+            else:
+                y += 50
         else:
-            y += 50
-    else:
-        y = 250
-    paddle.sety(y)
+            y = 250
+        paddle.sety(y)
 
 
 # move paddle down
-def move_down(paddle, single_play=False, level=''):
-    y = paddle.ycor()
-    if y > -250:
-        if single_play:
-            if level == 'easy':
-                y += -8.5
-            if level == 'medium':
-                y += -14
-            if level == 'hard':
-                y += -16
+def move_down(paddle, single_play=False, level='', is_paused=False):
+    if not is_paused:
+        y = paddle.ycor()
+        if y > -250:
+            if single_play:
+                if level == 'easy':
+                    y += -8.5
+                if level == 'medium':
+                    y += -14
+                if level == 'hard':
+                    y += -16
+            else:
+                y += -50
         else:
-            y += -50
-    else:
-        y = -250
-    paddle.sety(y)
+            y = -250
+        paddle.sety(y)
+
+def npc(ball, paddle_2, level):
+        if ball.xcor() > -80:
+            if paddle_2.ycor()-20 > ball.ycor():
+                move_down(paddle_2, single_play=True, level=level)
+            if paddle_2.ycor()+20 < ball.ycor():
+                move_up(paddle_2, single_play=True, level=level)
 
 
 def exit_game():
