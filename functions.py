@@ -35,13 +35,13 @@ def move_up(paddle, single_play=False, nivel=''):
     if y < 250:
         if single_play:
                 if nivel == 'easy':
-                    y += 0.2
+                    y += 10
                 if nivel == 'medium':
-                    y += 0.5
+                    y += 15
                 if nivel == 'hard':
-                    y += 1
+                    y += 15
         else:
-            y += 20
+            y += 50
     else:
         y = 250
     paddle.sety(y)
@@ -53,13 +53,13 @@ def move_down(paddle, single_play=False, nivel=''):
     if y > -250:
         if single_play:
             if nivel == 'easy':
-                y += -0.2
+                y += -10
             if nivel == 'medium':
-                y += -0.5
+                y += -15
             if nivel == 'hard':
-                y += -1
+                y += -15
         else:
-            y += -20
+            y += -50
     else:
         y = -250
     paddle.sety(y)

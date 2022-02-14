@@ -116,17 +116,17 @@ def level_select():
                 print(x, y)
                 print('Level 1')
                 nivel = 'easy'
-                ball_dx = 1
+                ball_dx = 10
             elif -50 < y < -10:
                 print(x, y)
                 print('Level 2')
                 nivel='medium'
-                ball_dx = 1.5
+                ball_dx = 16
             elif -110 < y < -80:
                 print(x, y)
                 print('Level 3')
                 nivel='hard'
-                ball_dx = 2
+                ball_dx = 22
                 paddle_width = 3.5
                 score_win = 15
             play_sound('assets/403016__inspectorj__ui-confirmation-alert-c1.wav')
@@ -241,6 +241,7 @@ def play_game():
 
 
     while True:
+        time.sleep(FPS)
         game_screen.update()
 
         # ball move
@@ -286,10 +287,10 @@ def play_game():
 
             # part upper
             if paddle_1.ycor() + 55 > ball.ycor() > paddle_1.ycor() + 15:
-                ball.dy = 0.5
+                ball.dy = 10
             # part bottom
             elif paddle_1.ycor() - 15 > ball.ycor() > paddle_1.ycor() - 55:
-                ball.dy = -0.5
+                ball.dy = -10
             # part middle
             else:
                 ball.dy = random.uniform(-0.05, 0.05)
@@ -301,10 +302,10 @@ def play_game():
 
             # part upper
             if paddle_2.ycor() + 55 >= ball.ycor() >= paddle_2.ycor() + 15:
-                ball.dy = 0.5
+                ball.dy = 10
             # part bottom
             elif paddle_2.ycor() - 15 >= ball.ycor() >= paddle_2.ycor() - 55:
-                ball.dy = -0.5
+                ball.dy = -10
             # part middle
             else:
                 ball.dy = random.uniform(-0.05, 0.0)
@@ -325,5 +326,4 @@ def play_game():
 
 if __name__ == '__main__':
     start_page()
-    time.sleep(FPS)
     turtle.done()
