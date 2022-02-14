@@ -36,7 +36,7 @@ def move_up(paddle, single_play=False, level='', is_paused=False):
         if y < 250:
             if single_play:
                 if level == 'easy':
-                    y += 8.5
+                    y += 10
                 if level == 'medium':
                     y += 14
                 if level == 'hard':
@@ -55,7 +55,7 @@ def move_down(paddle, single_play=False, level='', is_paused=False):
         if y > -250:
             if single_play:
                 if level == 'easy':
-                    y += -8.5
+                    y += -10
                 if level == 'medium':
                     y += -14
                 if level == 'hard':
