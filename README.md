@@ -78,3 +78,4 @@ And voilà... Yes, it's a simple game!
 
 <img src="https://img.shields.io/github/forks/melinnediniz/PONG-LPC?label=Forks&message=&color=ff69b4&style=for-the-badge&logo=ghost"/> <img src="https://img.shields.io/github/stars/melinnediniz/PONG-LPC?label=Stars&message=&color=yellowgreen&style=for-the-badge&logo=ghost"/>
 <img src="https://img.shields.io/github/license/melinnediniz/PONG-LPC?label=license&message=&color=informational&style=for-the-badge&logo=ghost"/>
+<img src= "https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white"/>
