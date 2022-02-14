@@ -1,6 +1,6 @@
 import winsound
 import turtle
-from pong import FONT, start_page, main_screen
+from pong import FONT
 
 
 # play sound function
@@ -66,6 +66,7 @@ def move_down(paddle, single_play=False, level='', is_paused=False):
             y = -250
         paddle.sety(y)
 
+
 def npc(ball, paddle_2, level):
         if ball.xcor() > -80:
             if paddle_2.ycor()-20 > ball.ycor():
@@ -78,9 +79,3 @@ def exit_game():
     # draw exit warning
     turtle.onkeypress(turtle.bye, "Escape")
     print('Exit game')
-
-
-def reset_game():
-    # draw_text(xcor=0, ycor=-200, color='blue', msg="PRESS 'R' TO RESET", fontsize=15)
-    main_screen.clear()
-    start_page()

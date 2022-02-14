@@ -12,8 +12,6 @@ FPS = 1 / 60
 # defining global variables
 single_play = False
 level = ''
-paddle_width = 5
-paddle_collision = 50
 ball_dx = 1
 score_win = 5
 
@@ -94,6 +92,7 @@ def select_mode():
                 level_select()
 
         play_sound(BUTTON_SOUND)
+
     main_screen.listen()
     main_screen.onscreenclick(chosen_mode, 1)
 
@@ -111,7 +110,7 @@ def level_select():
     exit_game()
 
     def chosen_level(x, y):
-        global ball_dx, paddle_width, score_win, level
+        global ball_dx, score_win, level
         if -100 < x < 85:
             if 10 < y < 45:
                 print(x, y)
@@ -128,7 +127,6 @@ def level_select():
                 print('Level 3')
                 level = 'hard'
                 ball_dx = 15
-                paddle_width = 3.5
                 score_win = 10
             play_sound(BUTTON_SOUND)
             main_screen.clear()
@@ -140,17 +138,19 @@ def level_select():
 
 def play_game():
     # exit game warning
-    draw_text(0, -295, "red", "PRESS 'ESC' TO EXIT", 10)
+    draw_text(-265, -295, "red", "PRESS 'ESC' TO EXIT", 10)
     exit_game()
+    # pause warning
+    draw_text(245, -295, "yellow", "PRESS 'SPACE' TO PAUSE", 10)
 
     print(level)
 
-    global PAUSED 
+    global PAUSED
     PAUSED = False
-    
+
     # draw window
     game_screen = turtle.Screen()
-    game_screen.title("My Pong")
+    game_screen.title("PLAYING PING PONG")
     game_screen.bgcolor("black")
     game_screen.setup(width=800, height=600)
     game_screen.tracer(0)
@@ -165,7 +165,7 @@ def play_game():
     paddle_1.speed(0)
     paddle_1.shape("square")
     paddle_1.color("#CD7011")
-    paddle_1.shapesize(stretch_wid=paddle_width, stretch_len=1)
+    paddle_1.shapesize(stretch_wid=5, stretch_len=1)
     paddle_1.penup()
     paddle_1.goto(-350, 0)
 
@@ -174,7 +174,7 @@ def play_game():
     paddle_2.speed(0)
     paddle_2.shape("square")
     paddle_2.color("#16899E")
-    paddle_2.shapesize(stretch_wid=paddle_width, stretch_len=1)
+    paddle_2.shapesize(stretch_wid=5, stretch_len=1)
     paddle_2.penup()
     paddle_2.goto(350, 0)
 
@@ -204,7 +204,7 @@ def play_game():
     win = turtle.Turtle()
     win.speed(0)
     win.shape("square")
-    win.color("green")
+    win.color("yellow")
     win.penup()
     win.hideturtle()
     win.goto(0, 0)
@@ -218,25 +218,37 @@ def play_game():
 
     pause_text = turtle.Turtle()
     pause_text.hideturtle()
+
     def pause():
         global PAUSED
         if not PAUSED:
             pause_text.shape('square')
             pause_text.color('red')
             pause_text.goto(0, 0)
-            pause_text.write("PAUSED", align='center', font=(FONT , 24))
+            pause_text.write("PAUSED", align='center', font=(FONT, 24, "normal"))
+            draw_text(0, -100, 'gray', "PRESS 'R' TO RESET", 15)
             pause_text.penup()
             PAUSED = True
         else:
             pause_text.clear()
             PAUSED = False
 
+    def reset():
+        if score_1 < score_win and score_2 < score_win:
+            win.clear()
+            game_screen.clear()
+            ball.dx = 0
+            ball.dy = 0
+            select_mode()
+        else:
+            print('No reset')
+            draw_text(0, -100, 'gray', "PRESS 'ESC' TO EXIT", 15)
+
     # keyboard
     keys_pressed = set()
     game_screen.listen()
-
-    game_screen.onkeypress(pause, 'p')
-
+    game_screen.onkeypress(reset, 'r')
+    game_screen.onkeypress(pause, 'space')
     game_screen.onkeypress(lambda: keys_pressed.add('up_1'), 'w')
     game_screen.onkeypress(lambda: keys_pressed.add('down_1'), "s")
     game_screen.onkeyrelease(lambda: keys_pressed.remove('up_1'), 'w')
@@ -254,7 +266,6 @@ def play_game():
         game_screen.ontimer(listen_keypress, 1000 // 30)
 
     listen_keypress()
-
 
     while True:
         time.sleep(FPS)
@@ -291,7 +302,7 @@ def play_game():
             else:
                 play_sound(SCORE_SOUND)
             ball.goto(0, random.randint(-200, 200))
-            ball.dx = -ball_dx/2
+            ball.dx = -ball_dx / 2
             ball.dy = -0.4
 
         # collision with left wall
@@ -304,12 +315,12 @@ def play_game():
             else:
                 play_sound(SCORE_SOUND)
             ball.goto(0, random.randint(-200, 200))
-            ball.dx = ball_dx/2
+            ball.dx = ball_dx / 2
             ball.dy = -0.4
 
         # collision with paddle 1
         if ball.xcor() < -330 and paddle_1.ycor() + 55 > ball.ycor() > paddle_1.ycor() - 55:
-            ball.dx = ball_dx*2
+            ball.dx = ball_dx * 2
             play_sound(UP_DOWN_SOUND)
 
             # part upper
@@ -324,7 +335,7 @@ def play_game():
 
         # collision with paddle 2
         if ball.xcor() > 330 and paddle_2.ycor() + 55 > ball.ycor() > paddle_2.ycor() - 55:
-            ball.dx = -ball_dx*2
+            ball.dx = -ball_dx * 2
             play_sound(UP_DOWN_SOUND)
 
             # part upper
@@ -336,19 +347,15 @@ def play_game():
             # part middle
             else:
                 ball.dy = random.uniform(-2, 2)
-        
-        
 
         # win condition
         if score_1 == score_win or score_2 == score_win:
             winner = "1P" if score_1 > score_2 else "2P"
             ball.dx = 0
             ball.dy = 0
-            ball.hideturtle()
-            paddle_1.hideturtle()
-            paddle_2.hideturtle()
+            paddle_1.hideturtle(), paddle_2.hideturtle()
             win.write("CONGRATS, {} YOU'RE THE WINNER!".format(winner), align="center",
-                      font=(FONT, 15, "normal"))
+                      font=(FONT, 18, "normal"))
 
 
 if __name__ == '__main__':
