@@ -68,14 +68,13 @@ def move_down(paddle, single_play=False, level='', is_paused=False):
 
 
 def npc(ball, paddle_2, level):
-        if ball.xcor() > -80:
-            if paddle_2.ycor()-20 > ball.ycor():
-                move_down(paddle_2, single_play=True, level=level)
-            if paddle_2.ycor()+20 < ball.ycor():
-                move_up(paddle_2, single_play=True, level=level)
+    if ball.xcor() > -80:
+        if paddle_2.ycor() - 20 > ball.ycor():
+            move_down(paddle_2, single_play=True, level=level)
+        if paddle_2.ycor() + 20 < ball.ycor():
+            move_up(paddle_2, single_play=True, level=level)
 
 
 def exit_game():
     # draw exit warning
     turtle.onkeypress(turtle.bye, "Escape")
-    print('Exit game')

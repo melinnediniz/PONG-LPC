@@ -204,7 +204,7 @@ def play_game():
     win = turtle.Turtle()
     win.speed(0)
     win.shape("square")
-    win.color("yellow")
+    win.color("orange")
     win.penup()
     win.hideturtle()
     win.goto(0, 0)
@@ -234,11 +234,14 @@ def play_game():
             PAUSED = False
 
     def reset():
-        if score_1 == score_win or score_2 == score_win:
-            game_screen.clear()
-            ball.dx = 0
-            ball.dy = 0
-            select_mode()
+        global score_win
+        game_screen.clear()
+        ball.dx = 0
+        ball.dy = 0
+        select_mode()
+        if level == 'hard':
+            score_win = 5
+        select_mode()
 
     # keyboard
     keys_pressed = set()
@@ -347,13 +350,11 @@ def play_game():
         # win condition
         if score_1 == score_win or score_2 == score_win:
             winner = "1P" if score_1 > score_2 else "2P"
-            ball.dx = 0
-            ball.dy = 0
-            paddle_1.hideturtle(), paddle_2.hideturtle()
             win.write("CONGRATS, {} YOU'RE THE WINNER!".format(winner), align="center",
                       font=(FONT, 18, "normal"))
             draw_text(0, -100, 'gray', "PRESS 'R' TO RESET", 15)
             turtle.done()
+
 
 if __name__ == '__main__':
     start_page()
