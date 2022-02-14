@@ -10,9 +10,10 @@ FPS = 1 / 60
 
 # defining global variables
 single_play = False
+nivel = ''
 paddle_width = 5
 paddle_collision = 50
-ball_dx = 2
+ball_dx = 1
 score_win = 3
 
 # draw main screen
@@ -88,6 +89,8 @@ def select_mode():
                 print('Single player')
                 single_play = True
                 print(f'npc joga? {single_play}')
+                main_screen.clear()
+                level_select()
 
         play_sound('assets/403016__inspectorj__ui-confirmation-alert-c1.wav')
     main_screen.listen()
@@ -107,20 +110,23 @@ def level_select():
     exit_game()
 
     def chosen_level(x, y):
-        global ball_dx, paddle_width, score_win
+        global ball_dx, paddle_width, score_win, nivel
         if -100 < x < 85:
             if 10 < y < 45:
                 print(x, y)
                 print('Level 1')
-                ball_dx = 1.5
+                nivel = 'easy'
+                ball_dx = 1
             elif -50 < y < -10:
                 print(x, y)
                 print('Level 2')
-                ball_dx = 2
+                nivel='medium'
+                ball_dx = 1.5
             elif -110 < y < -80:
                 print(x, y)
                 print('Level 3')
-                ball_dx = 2.5
+                nivel='hard'
+                ball_dx = 2
                 paddle_width = 3.5
                 score_win = 15
             play_sound('assets/403016__inspectorj__ui-confirmation-alert-c1.wav')
@@ -136,6 +142,7 @@ def play_game():
     draw_text(0, -295, "red", "PRESS 'SPACE' TO EXIT", 10)
     exit_game()
 
+    print(nivel)
     # draw window
     game_screen = turtle.Screen()
     game_screen.title("My Pong")
@@ -209,13 +216,14 @@ def play_game():
     game_screen.listen()
     game_screen.onkeypress(lambda: keys_pressed.add('up_1'), 'w')
     game_screen.onkeypress(lambda: keys_pressed.add('down_1'), "s")
-    game_screen.onkeypress(lambda: keys_pressed.add('up_2'), "Up")
-    game_screen.onkeypress(lambda: keys_pressed.add('down_2'), "Down")
-
     game_screen.onkeyrelease(lambda: keys_pressed.remove('up_1'), 'w')
     game_screen.onkeyrelease(lambda: keys_pressed.remove('down_1'), "s")
-    game_screen.onkeyrelease(lambda: keys_pressed.remove('up_2'), "Up")
-    game_screen.onkeyrelease(lambda: keys_pressed.remove('down_2'), "Down")
+
+    if single_play != True:
+        game_screen.onkeypress(lambda: keys_pressed.add('up_2'), "Up")
+        game_screen.onkeypress(lambda: keys_pressed.add('down_2'), "Down")
+        game_screen.onkeyrelease(lambda: keys_pressed.remove('up_2'), "Up")
+        game_screen.onkeyrelease(lambda: keys_pressed.remove('down_2'), "Down")
 
     def listen_keypress():
         for action in keys_pressed:
@@ -223,6 +231,14 @@ def play_game():
         game_screen.ontimer(listen_keypress, 1000 // 30)
 
     listen_keypress()
+
+    def npc():
+        if ball.xcor() > -80:
+            if paddle_2.ycor()-20 > ball.ycor():
+                move_down(paddle_2, single_play=True, nivel=nivel)
+            if paddle_2.ycor()+20 < ball.ycor():
+                move_up(paddle_2, single_play=True, nivel=nivel)
+
 
     while True:
         game_screen.update()
@@ -250,7 +266,7 @@ def play_game():
             hud.write("{} : {}".format(score_1, score_2), align="center", font=(FONT, 24, "normal"))
             play_sound(SCORE_SOUND)
             ball.goto(0, random.randint(-200, 200))
-            ball.dx = -ball_dx
+            ball.dx = -ball_dx/2
             ball.dy = -0.4
 
         # collision with left wall
@@ -260,12 +276,12 @@ def play_game():
             hud.write("{} : {}".format(score_1, score_2), align="center", font=(FONT, 24, "normal"))
             play_sound(SCORE_SOUND)
             ball.goto(0, random.randint(-200, 200))
-            ball.dx = ball_dx
+            ball.dx = ball_dx/2
             ball.dy = -0.4
 
         # collision with paddle 1
         if ball.xcor() < -330 and paddle_1.ycor() + 55 > ball.ycor() > paddle_1.ycor() - 55:
-            ball.dx = ball_dx
+            ball.dx = ball_dx*2
             play_sound(UP_DOWN_SOUND)
 
             # part upper
@@ -280,7 +296,7 @@ def play_game():
 
         # collision with paddle 2
         if ball.xcor() > 330 and paddle_2.ycor() + 55 > ball.ycor() > paddle_2.ycor() - 55:
-            ball.dx = -ball_dx
+            ball.dx = -ball_dx*2
             play_sound(UP_DOWN_SOUND)
 
             # part upper
@@ -292,6 +308,10 @@ def play_game():
             # part middle
             else:
                 ball.dy = random.uniform(-0.05, 0.0)
+        
+        # check mode game
+        if single_play:
+            npc()
 
         # win condition
         if score_1 == score_win or score_2 == score_win:
