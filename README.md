@@ -70,7 +70,7 @@ And voilà... Yes, it's a simple game!
 
 ### 4. Rocketseat's Blog
 
-[Artigo](https://blog.rocketseat.com.br/como-fazer-um-bom-readme/)
+[Article](https://blog.rocketseat.com.br/como-fazer-um-bom-readme/)
 
 ## 📌) Authors
 | [<img src="https://avatars.githubusercontent.com/u/69447962?v=4" width=115><br><sub>Lucas Cruz</sub>](https://github.com/olucascruz) |  [<img src="https://avatars.githubusercontent.com/u/93674466?v=4" width=115><br><sub>Manuela Bastos</sub>](https://github.com/manupbastos) |  [<img src="https://avatars.githubusercontent.com/u/61233511?v=4" width=115><br><sub>Melinne Diniz</sub>](https://github.com/melinnediniz) |
