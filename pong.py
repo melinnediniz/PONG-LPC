@@ -116,17 +116,17 @@ def level_select():
                 print(x, y)
                 print('Level 1')
                 level = 'easy'
-                ball_dx = 5
+                ball_dx = 8
             elif -50 < y < -10:
                 print(x, y)
                 print('Level 2')
                 level = 'medium'
-                ball_dx = 10
+                ball_dx = 16
             elif -110 < y < -80:
                 print(x, y)
                 print('Level 3')
                 level = 'hard'
-                ball_dx = 15
+                ball_dx = 20
                 score_win = 10
             play_sound(BUTTON_SOUND)
             main_screen.clear()
@@ -157,8 +157,8 @@ def play_game():
     game_screen.bgpic('assets/game_background.png')
 
     # scores
-    score_1 = 4
-    score_2 = 4
+    score_1 = 0
+    score_2 = 0
 
     # draw paddle 1
     paddle_1 = turtle.Turtle()
@@ -204,7 +204,7 @@ def play_game():
     win = turtle.Turtle()
     win.speed(0)
     win.shape("square")
-    win.color("orange")
+    win.color("green")
     win.penup()
     win.hideturtle()
     win.goto(0, 0)
@@ -226,7 +226,6 @@ def play_game():
             pause_text.color('red')
             pause_text.goto(0, 0)
             pause_text.write("PAUSED", align='center', font=(FONT, 24, "normal"))
-            draw_text(0, -100, 'gray', "PRESS 'R' TO RESET", 15)
             pause_text.penup()
             PAUSED = True
         else:
@@ -246,7 +245,9 @@ def play_game():
     # keyboard
     keys_pressed = set()
     game_screen.listen()
-    game_screen.onkeypress(reset, 'r')
+    if score_1 == score_win or score_2 == score_win:
+        game_screen.onkeypress(reset, 'r')
+    
     game_screen.onkeypress(pause, 'space')
     game_screen.onkeypress(lambda: keys_pressed.add('up_1'), 'w')
     game_screen.onkeypress(lambda: keys_pressed.add('down_1'), "s")
@@ -330,7 +331,7 @@ def play_game():
                 ball.dy = -10
             # part middle
             else:
-                ball.dy = random.uniform(-2, 2)
+                ball.dy = random.uniform(-3, 3)
 
         # collision with paddle 2
         if ball.xcor() > 330 and paddle_2.ycor() + 55 > ball.ycor() > paddle_2.ycor() - 55:
@@ -345,7 +346,7 @@ def play_game():
                 ball.dy = -10
             # part middle
             else:
-                ball.dy = random.uniform(-2, 2)
+                ball.dy = random.uniform(-3, 3)
 
         # win condition
         if score_1 == score_win or score_2 == score_win:
