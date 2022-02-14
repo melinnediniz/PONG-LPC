@@ -30,20 +30,36 @@ def draw_text(xcor, ycor, color, msg, fontsize):
 
 
 # move paddle up
-def move_up(paddle):
+def move_up(paddle, single_play=False, nivel=''):
     y = paddle.ycor()
     if y < 250:
-        y += 20
+        if single_play:
+                if nivel == 'easy':
+                    y += 0.2
+                if nivel == 'medium':
+                    y += 0.5
+                if nivel == 'hard':
+                    y += 1
+        else:
+            y += 20
     else:
         y = 250
     paddle.sety(y)
 
 
 # move paddle down
-def move_down(paddle):
+def move_down(paddle, single_play=False, nivel=''):
     y = paddle.ycor()
     if y > -250:
-        y += -20
+        if single_play:
+            if nivel == 'easy':
+                y += -0.2
+            if nivel == 'medium':
+                y += -0.5
+            if nivel == 'hard':
+                y += -1
+        else:
+            y += -20
     else:
         y = -250
     paddle.sety(y)
