@@ -1,4 +1,4 @@
-<h1 align="center">  PING PONG </h1>
+<h1 align="center">  PING PONG</h1>
 
 <h1 align= "center"> Activity 003: Refactoring Pong Game </h1>
 
@@ -68,7 +68,7 @@ And voilà... Yes, it's a simple game!
 
 ### 3. Google Fonts
 
-### 4. Blog da Rocketseat
+### 4. Rocketseat's Blog
 
 [Artigo](https://blog.rocketseat.com.br/como-fazer-um-bom-readme/)
 
@@ -76,5 +76,5 @@ And voilà... Yes, it's a simple game!
 | [<img src="https://avatars.githubusercontent.com/u/69447962?v=4" width=115><br><sub>Lucas Cruz</sub>](https://github.com/olucascruz) |  [<img src="https://avatars.githubusercontent.com/u/93674466?v=4" width=115><br><sub>Manuela Bastos</sub>](https://github.com/manupbastos) |  [<img src="https://avatars.githubusercontent.com/u/61233511?v=4" width=115><br><sub>Melinne Diniz</sub>](https://github.com/melinnediniz) |
 | :---: | :---: | :---: |
 
-<img src="https://img.shields.io/github/forks/melinnediniz/PONG-LPC?label=Forks&message=&color=ff69b4&style=for-the-badge&logo=ghost"/> <img src="https://img.shields.io/github/stars/melinnediniz/PONG-LPC?label=Stars&message=&color=green&style=for-the-badge&logo=ghost"/>
-<img src="https://img.shields.io/github/license/melinnediniz/PONG-LPC?label=license&message=MIT&color=9cf&style=for-the-badge&logo=ghost"/>
+<img src="https://img.shields.io/github/forks/melinnediniz/PONG-LPC?label=Forks&message=&color=ff69b4&style=for-the-badge&logo=ghost"/> <img src="https://img.shields.io/github/stars/melinnediniz/PONG-LPC?label=Stars&message=&color=yellowgreen&style=for-the-badge&logo=ghost"/>
+<img src="https://img.shields.io/github/license/melinnediniz/PONG-LPC?label=license&message=&color=informational&style=for-the-badge&logo=ghost"/>
