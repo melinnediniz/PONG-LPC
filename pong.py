@@ -237,7 +237,6 @@ def play_game():
         game_screen.clear()
         ball.dx = 0
         ball.dy = 0
-        select_mode()
         if level == 'hard':
             score_win = 5
         select_mode()
@@ -245,9 +244,7 @@ def play_game():
     # keyboard
     keys_pressed = set()
     game_screen.listen()
-    if score_1 == score_win or score_2 == score_win:
-        game_screen.onkeypress(reset, 'r')
-    
+    game_screen.onkeypress(reset, 'r')
     game_screen.onkeypress(pause, 'space')
     game_screen.onkeypress(lambda: keys_pressed.add('up_1'), 'w')
     game_screen.onkeypress(lambda: keys_pressed.add('down_1'), "s")
